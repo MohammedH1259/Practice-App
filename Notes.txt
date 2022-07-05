@@ -21,3 +21,7 @@ binds to the data property you set on it and keeps it in sync
 with input
 syntax:
 v-model = "variable" 
+
+
+Conditionally displaying components Via v:if and v:else 
+V-if will only render a block if the value to it is truthy else note 

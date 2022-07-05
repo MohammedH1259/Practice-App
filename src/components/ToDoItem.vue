@@ -1,12 +1,47 @@
 <template>
-  <div class = custom-checkbox>
-    <input type="checkbox" :id="id" :checked="isDone" class = "checkbox" @change = "$emit('checkbox-changed')"/>
-    <label :for = "id" class = "checkbox-label" >{{label}}</label>
+  <div class="stack-small" v-if="!isEditing">
+    <div class="custom-checkbox">
+      <input
+        type="checkbox"
+        class="checkbox"
+        :id="id"
+        :checked="isDone"
+        @change="$emit('checkbox-changed')"
+      />
+      <label :for="id" class="checkbox-label">{{ label }}</label>
+    </div>
+
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn"
+        @click="toggleToItemEditForm"
+        ref="editButton"
+      >
+        Edit <span class="visually-hidden">{{ label }}</span>
+      </button>
+      <button type="button" class="btn btn__danger" @click="deleteToDo">
+        Delete <span class="visually-hidden">{{ label }}</span>
+      </button>
+    </div>
   </div>
+  <to-do-item-edit-form
+    v-else
+    :id="id"
+    :label="label"
+    @item-edited="itemEdited"
+    @edit-cancelled="editCancelled"
+  ></to-do-item-edit-form>
 </template>
 
 <script>
+import ToDoItemEditForm from './ToDoItemEditForm';
+
 export default {
+  components: {
+    ToDoItemEditForm,
+  },
+
   props: {
     label: {
       required: true,
@@ -17,22 +52,52 @@ export default {
       type: Boolean,
     },
     id: {
-      required: true, 
+      required: true,
       type: String,
-    }
+    },
   },
 
   data() {
     return {
-      //These values that we are returning in the data function MUST be differently named than their props values due to how this. behaves as it binds everything
-      isDone: this.done,
+      //These values that we are returning in the data function MUST be differently named than their props values due to how this. behaves as it binds everything,
+      isEditing: false,
     };
+  },
+
+  computed: {
+    isDone() {
+      return this.done;
+    },
+  },
+
+  methods: {
+    deleteToDo() {
+      this.$emit('item-deleted');
+    },
+
+    toggleToItemEditForm() {
+      this.isEditing = true;
+    },
+
+    itemEdited(newLabel) {
+      this.$emit('item-edited', newLabel);
+      this.isEditing = false;
+      this.focusOnEditButton();
+    },
+
+    editCancelled() {
+      this.isEditing = false;
+      this.focusOnEditButton();
+    },
+    focusOnEditButton() {
+      this.$nextTick(() => {
+        const editButtonRef = this.$refs.editButton;
+        editButtonRef.focus();
+      });
+    },
   },
 };
 </script>
-
-
-
 
 <style scoped>
 .custom-checkbox > .checkbox-label {
@@ -85,7 +150,7 @@ export default {
   padding-left: 40px;
   clear: left;
 }
-.custom-checkbox > input[type="checkbox"] {
+.custom-checkbox > input[type='checkbox'] {
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
   position: absolute;
@@ -108,7 +173,7 @@ export default {
   touch-action: manipulation;
 }
 .custom-checkbox > label::before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -118,13 +183,13 @@ export default {
   border: 2px solid currentcolor;
   background: transparent;
 }
-.custom-checkbox > input[type="checkbox"]:focus + label::before {
+.custom-checkbox > input[type='checkbox']:focus + label::before {
   border-width: 4px;
   outline: 3px dashed #228bec;
 }
 .custom-checkbox > label::after {
   box-sizing: content-box;
-  content: "";
+  content: '';
   position: absolute;
   top: 11px;
   left: 9px;
@@ -137,7 +202,7 @@ export default {
   opacity: 0;
   background: transparent;
 }
-.custom-checkbox > input[type="checkbox"]:checked + label::after {
+.custom-checkbox > input[type='checkbox']:checked + label::after {
   opacity: 1;
 }
 @media only screen and (min-width: 40rem) {
@@ -149,6 +214,4 @@ export default {
     line-height: 1.31579;
   }
 }
-
-
 </style>

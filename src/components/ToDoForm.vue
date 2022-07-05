@@ -1,45 +1,39 @@
 <template>
-  <form @submit.prevent = "onSubmit">
-    <h2 class = "label-wrapper">
-    <label for = "new-todo-input" class = "label__lg">
-      Enter New Task 
-    </label>
+  <form @submit.prevent="onSubmit">
+    <h2 class="label-wrapper">
+      <label for="new-todo-input" class="label__lg"> Enter New Task </label>
     </h2>
     <input
-      type = "text"
-      id = "new-todo-input"
-      name = "new-todo"
-      autocomplete = "off"
-      class = "input__lg"
-      v-model.lazy.trim ="label"
+      type="text"
+      id="new-todo-input"
+      name="new-todo"
+      autocomplete="off"
+      class="input__lg"
+      v-model.lazy.trim="label"
     />
-    <button type = "submit" class = "btn btn__primary btn__lg">
-      Add Task 
-    </button>
+    <button type="submit" class="btn btn__primary btn__lg">Add Task</button>
   </form>
 </template>
 
 <script>
-  export default{
-    methods: {
-      onSubmit(){
-        if(this.label ===""){
-          return;
-        }
-        this.$emit("todo-added", this.label);
-        this.label = "";
+export default {
+  methods: {
+    onSubmit() {
+      if (this.label === '') {
+        return;
       }
+      this.$emit('todo-added', this.label);
+      this.label = '';
     },
+  },
 
-    data(){
-      return {
-        label: ""
-      }
-    }
-
-  };
+  data() {
+    return {
+      label: '',
+    };
+  },
+};
 </script>
-
 
 <style scoped>
 .custom-checkbox > .checkbox-label {
@@ -92,7 +86,7 @@
   padding-left: 40px;
   clear: left;
 }
-.custom-checkbox > input[type="checkbox"] {
+.custom-checkbox > input[type='checkbox'] {
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
   position: absolute;
@@ -115,7 +109,7 @@
   touch-action: manipulation;
 }
 .custom-checkbox > label::before {
-  content: "";
+  content: '';
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -125,13 +119,13 @@
   border: 2px solid currentcolor;
   background: transparent;
 }
-.custom-checkbox > input[type="checkbox"]:focus + label::before {
+.custom-checkbox > input[type='checkbox']:focus + label::before {
   border-width: 4px;
   outline: 3px dashed #228bec;
 }
 .custom-checkbox > label::after {
   box-sizing: content-box;
-  content: "";
+  content: '';
   position: absolute;
   top: 11px;
   left: 9px;
@@ -144,7 +138,7 @@
   opacity: 0;
   background: transparent;
 }
-.custom-checkbox > input[type="checkbox"]:checked + label::after {
+.custom-checkbox > input[type='checkbox']:checked + label::after {
   opacity: 1;
 }
 @media only screen and (min-width: 40rem) {
@@ -156,5 +150,4 @@
     line-height: 1.31579;
   }
 }
-
 </style>

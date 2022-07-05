@@ -1,22 +1,26 @@
 <template>
   <div id="app">
     <h1>To-Do List</h1>
-    <to-do-form @todo-added = "addToDo"></to-do-form>
-    <h2 id = "list-summary">{{listSummary}}</h2>
-    <ul aria-labelledby = "list-summary" class = "stack-large">
+    <to-do-form @todo-added="addToDo"></to-do-form>
+    <h2 id="list-summary" ref = "listSummary" tabindex = -1>{{ listSummary }}</h2>
+    <ul aria-labelledby="list-summary" class="stack-large">
       <li v-for="item in ToDoItems" :key="item.id">
-        <to-do-item :label = "item.label" :done = "item.done" :id = "item.id" @checkbox-changed="updateDoneStatus(item.id)"></to-do-item>
+        <to-do-item
+          :label="item.label"
+          :done="item.done"
+          :id="item.id"
+          @checkbox-changed="updateDoneStatus(item.id)"
+          @item-deleted="deleteToDo(item.id)"
+          @item-edited="editToDo(item.id, $event)"
+        ></to-do-item>
       </li>
     </ul>
   </div>
 </template>
 
-
-
-
 <script>
 import ToDoItem from './components/ToDoItem.vue';
-import ToDoForm from './components/ToDoForm.vue'
+import ToDoForm from './components/ToDoForm.vue';
 import uniqueId from 'lodash.uniqueid';
 import './assets/reset.css';
 
@@ -24,47 +28,60 @@ export default {
   name: 'App',
   components: {
     ToDoItem,
-    ToDoForm
+    ToDoForm,
   },
 
-  
-  data(){
-    return{
+  data() {
+    return {
       ToDoItems: [
-        {id: uniqueId('todo-'), label: 'Learn Vue', done: false},
-        {id: uniqueId('todo-'), label: 'Create a Vue Project with the CLI', done: true},
-        {id: uniqueId('todo-'), label: 'Have Fun', done: true },
-        {id: uniqueId('todo-'), label: 'Create a to-do list', done: false}
-    ]
-    }
+        { id: uniqueId('todo-'), label: 'Learn Vue', done: false },
+        {
+          id: uniqueId('todo-'),
+          label: 'Create a Vue Project with the CLI',
+          done: true,
+        },
+        { id: uniqueId('todo-'), label: 'Have Fun', done: true },
+        { id: uniqueId('todo-'), label: 'Create a to-do list', done: false },
+      ],
+    };
   },
-
 
   methods: {
-    addToDo(toDoLabel){
+    addToDo(toDoLabel) {
       this.ToDoItems.push({
         id: uniqueId('todo-'),
-        label: toDoLabel, 
-        done: false
+        label: toDoLabel,
+        done: false,
       });
     },
 
-    updateDoneStatus(toDoId){
-      const toDoToUpdate = this.ToDoItems.find(item => item.id === toDoId);
+    updateDoneStatus(toDoId) {
+      const toDoToUpdate = this.ToDoItems.find((item) => item.id === toDoId);
       toDoToUpdate.done = !toDoToUpdate.done;
+      this.$refs.listSummary.focus()
+    },
+
+    deleteToDo(toDoId) {
+      const itemIndex = this.ToDoItems.findIndex((item) => item.id === toDoId);
+      this.ToDoItems.splice(itemIndex, 1);
+    },
+
+    editToDo(toDoId, newLabel) {
+      const toDoToEdit = this.ToDoItems.find((item) => item.id === toDoId);
+      toDoToEdit.label = newLabel;
     },
   },
 
   computed: {
-    listSummary(){
-      const numberFinishedItems = this.ToDoItems.filter(item => item.done).length
-      return `${numberFinishedItems} out of ${this.ToDoItems.length} items completed`
-    }
-  }
+    listSummary() {
+      const numberFinishedItems = this.ToDoItems.filter(
+        (item) => item.done
+      ).length;
+      return `${numberFinishedItems} out of ${this.ToDoItems.length} items completed`;
+    },
+  },
 };
 </script>
-
-
 
 <style>
 .btn {
@@ -103,16 +120,16 @@ export default {
   flex: 0 0 100%;
   text-align: center;
 }
-[class*="__lg"] {
+[class*='__lg'] {
   display: inline-block;
   width: 100%;
   font-size: 1.9rem;
 }
-[class*="__lg"]:not(:last-child) {
+[class*='__lg']:not(:last-child) {
   margin-bottom: 1rem;
 }
 @media screen and (min-width: 620px) {
-  [class*="__lg"] {
+  [class*='__lg'] {
     font-size: 2.4rem;
   }
 }
@@ -126,7 +143,7 @@ export default {
   clip-path: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
-[class*="stack"] > * {
+[class*='stack'] > * {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -175,4 +192,3 @@ export default {
   margin-bottom: 1rem;
 }
 </style>
-
