@@ -1,0 +1,23 @@
+v-bind:attribute = "Expression"
+This is a way to map javascript to our html compoonents - say we have a vue component such as a checkbox, we want the checked property to depend on the isDone props -> so we would bind that property to in our .vue component file
+and in app vue if we wanted to pass it we would say that v-bind:isChecked = "True"
+
+V-for
+acts like a for loop to display to display a list of things 
+>This is applied to elements like other attinutes
+>v-for = "item in items" this attatches to the element that we want to repeat and then renders that element and its children 
+>App Case:
+*Display an Li element for every to-do item inside our ToDoItems array, we then want to pass the data from each to do item to a ToDoitem component
+
+
+v-on 
+Used for event handling - we want our submit even in form to call our custom onSubmit method 
+syntax
+v-on:event = "method" or @event = "method"
+
+
+v-model
+binds to the data property you set on it and keeps it in sync 
+with input
+syntax:
+v-model = "variable" 
